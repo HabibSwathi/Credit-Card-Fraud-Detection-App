@@ -50,33 +50,31 @@ export default function OTPVerification() {
   // -----------------------------------------------------
   // Handle OTP Submit
   // -----------------------------------------------------
-  const handleVerify = async (e) => {
-    e.preventDefault();
+const handleVerify = async (e) => {
+  e.preventDefault();
 
-    if (otp.length !== 6) {
-      alert("Enter a valid 6-digit OTP");
-      return;
-    }
+  // 🔴 TEMPORARY OTP BYPASS (DEV MODE)
+  if (!tempToken) {
+    alert("Session expired. Please login again.");
+    navigate("/login");
+    return;
+  }
 
-    setLoading(true);
+  // Promote tempToken → final token
+  setToken(tempToken);
+  setTempToken(null);
 
-    try {
-      const res = await axios.post("/otp/verify", { otp });
+  try {
+    const profile = await axios.get("/auth/me");
+    setUser(profile.data.user);
+  } catch (err) {
+    console.error("Profile fetch error:", err);
+  }
 
-      setToken(res.data.token);
-      setTempToken(null);
+  // alert("OTP verification skipped (temporary)");
+  navigate("/face-enroll");
+};
 
-      const profile = await axios.get("/auth/me");
-      setUser(profile.data.user);
-
-      navigate("/face-enroll");
-    } catch (err) {
-      console.error("OTP verify error:", err);
-      alert(err.response?.data?.message || "OTP verification failed");
-    }
-
-    setLoading(false);
-  };
 
   return (
     <Box
