@@ -58,7 +58,7 @@ export default function App() {
 
       {/* OTP Step (requires tempToken) */}
       <Route
-        path="/otp-verify"
+        path="/otp/verify"
         element={
           <MFARoute>
             <OTPVerification />

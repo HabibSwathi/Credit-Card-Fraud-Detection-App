@@ -41,7 +41,7 @@ export default function Login() {
       if (res.data.mfa) {
         setTempToken(res.data.tempToken);
         setUser(res.data.user);
-        navigate("/otp-verify");
+        navigate("/otp/verify");
         return;
       }
 
